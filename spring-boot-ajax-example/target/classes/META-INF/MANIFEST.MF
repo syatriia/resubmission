@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Implementation-Title: spring-boot-ajax-example
+Implementation-Version: 1.0
+Built-By: Syatriia
+Implementation-Vendor-Id: com.prudential
+Build-Jdk: 1.8.0_221
+Implementation-URL: https://projects.spring.io/spring-boot/spring-boot
+ -ajax-example/
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
+
