@@ -10,6 +10,9 @@
 
 <link rel="stylesheet" type="text/css"
 	href="css/jquery.dataTables.min.css" />
+	
+<link rel="stylesheet" type="text/css"
+	href="css/datatables.css" />
 <!-- <script type="text/javascript" src="webjars/jquery/2.2.4/jquery.min.js"></script> -->
 <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
 <script type="text/javascript" src="js/home.js"></script>
@@ -21,20 +24,20 @@
 </head>
 <body>
 	<!-- Row start -->
-	<div class="row">
+	<div id ="main" class="row">
 		<div class="col-md-12 col-sm-6 col-xs-12">
 			<div class="panel panel-default">
 				<div class="panel-body">
 					<form class="form-horizontal row-border" action="#">
 						<div class="form-group">
-							<label class="col-md-2 control-label">Document Id</label>
+							<label class="col-md-2 control-label"></label>
 							<div class="col-md-3">
-								<input type="text" name="regular" class="form-control" />
+								
 							</div>
 							<label class="col-md-2 control-label">From</label>
 							<div class="col-md-2">
 								<div class='input-group date' id='datetimepicker1'>
-									<input type='text' class="form-control" /> <span
+									<input type='text' id='startDate' class="form-control" /> <span
 										class="input-group-addon"> <span
 										class="glyphicon glyphicon-calendar"></span>
 									</span>
@@ -43,7 +46,7 @@
 							<label class="col-md-1 control-label">To</label>
 							<div class="col-md-2">
 								<div class='input-group date' id='datetimepicker2'>
-									<input type='text' class="form-control" /> <span
+									<input type='text' id='endDate' class="form-control" /> <span
 										class="input-group-addon"> <span
 										class="glyphicon glyphicon-calendar"></span>
 									</span>
@@ -51,15 +54,9 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-md-2 control-label">Table Name</label>
-							<div class="col-md-3">
-								<input type="text" name="regular" class="form-control" />
-							</div>
-						</div>
-						<div class="form-group">
 							<label class="col-md-10 control-label"></label>
 							<div class="col-md-2">
-								<button class="btn btn-primary btn-block" type="submit">Search</button>
+								<button class="btn btn-primary btn-block" onclick="searchByDate()">Search</button>
 							</div>
 						</div>
 
@@ -69,23 +66,91 @@
 		</div>
 		<div class="col-lg-12">
 			<table id="data" class="table table-striped table-bordered" style="width:100%">
-				<thead>
+				 <thead>
 					<tr>
 						<th>Doc Id</th>
 						<th>Table Name</th>
 						<th>Error Message</th>
-						<th>Doc</th>
+						<th>Type</th>
+						<th>Status</th>
+						<th>State</th>
 						<th>TimeStamp</th>
 						<th>Send to Kafka</th>
 					</tr>
 				</thead>
-				<tbody id="body_data"></tbody>
-
+				<tbody></tbody>
 			</table>
 		</div>
 	</div>
 
 	<!-- Row end -->
+
+	<div id="edit" class="row">
+			<div class="col-md-12 col-sm-6 col-xs-12">
+				<div class="panel panel-default">
+					<div class="panel-heading clearfix">
+						<i class="icon-calendar"></i>
+						<h3 class="panel-title">Edit Doc</h3>
+					</div>
+
+					<div class="panel-body">
+						<form class="form-horizontal row-border" action="#">
+							<div class="form-group">
+								<label class="col-md-2 control-label">Doc Id</label>
+								<div class="col-md-5">
+									<input id = "form_doc_id" class="form-control" type="text" name="readonly"
+										readonly="" value="read only"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label">Table Name</label>
+								<div class="col-md-5">
+									<input id = "form_table_name" class="form-control" type="text" name="readonly"
+										readonly="" value="read only"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label">Error Message</label>
+								<div class="col-md-10">
+									<input id = "form_error_message" class="form-control" type="text" name="readonly"
+										readonly="" value="read only"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label">Error Details</label>
+								<div class="col-md-10">
+									<textarea id = "form_error_details" class="form-control"
+										rows="10" readonly="" value="read only">read only</textarea>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label">Document</label>
+								<div class="col-md-10">
+									<textarea id = "form_doc" class="form-control" 
+										rows="10">document error</textarea>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-10 control-label"></label>
+								<div class="col-md-2">
+									
+									<!-- <button onclick="upsertDoc()">Click me</button> -->
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-8 control-label"></label>
+					<div class="col-md-2">
+						<button id="form_update_doc" class="btn btn-danger btn-block" style="float: right" onclick="refresh()">Back</button>
+					</div>
+					<div class="col-md-2">
+						<button id="form_update_doc" class="btn btn-primary btn-block" style="float: right" onclick="upsertDoc()">Submit</button>
+					</div>
+				</div>
+		</div>
 
 	<script type="text/javascript">
 		$(function() {

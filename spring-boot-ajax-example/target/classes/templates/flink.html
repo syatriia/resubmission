@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>Flink</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<script type="text/javascript">
+transform();
+
+function transform(){
+ 
+var newMessage = {};
+var msg = '{"payload":{"before":null,"after":{"id":"74","group_type_code":"GROUP","group_status_code":"PENDING","code":"001098-A19-JK","name":"Innisfree JKT","common_renewal_date_flag":"N","eligible_accredited_flag":"N","acc_status_code":null,"sales_region_id":"1000","creuser":"1225","credate":1556092535392,"upduser":"1225","upddate":1556099087854,"administrator_id":"10","membership_num_seq":null,"start_date":1459814400000,"end_date":1556064000000,"premium_change_on_agebanded":null,"employee_only":"N","membership_fee":"N","renewal_type_code":"GROUP","surcharge_fee":null,"aso_fee":null,"discount":null,"endorsement_fee":"15000.00","duty_stamp_fee":"6000.00","delete_flag":null,"policy_holder":"Innisfree","business_type":"NEW_BUSINESS","tax_code":"ZERO","tax_number":"0123456789","membership_fee_amount":null,"tax_payment_type_code":"PAYMENT_MODE","occ_number":"","reinstate_date":null,"frequency_code":"ANNUAL","underwriter_id":"1033","policy_type_id":"10","full_refund_flag":"N","refunded_flag":"N","termination_type_code":null,"reinstatement_type_code":null,"short_term_policy_flag":"N","deactivation_date":null,"cwt":"0.00","waive_surcharge":"N","override_surcharge":null,"group_code_activated":"Y","travel_type_code":null,"renewal_count":null,"lapsed_effective_date":null,"expired_effective_date":null,"cancellation_date":null,"refund_method_code":null,"customer_account_id":null,"surrender_rate":null,"member_aggregation_limit":null,"invoicing_level":"GROUP","invoicing_format":null,"renewal_category_code":"AUTO_RENEWAL","membership_card_type_code":null,"tpa_id":null,"quotation_ref_number":"0000-0000","auto_billing":"N","cancel_remarks":null,"source_of_business_code":null,"bank_referral_code":null,"bank_branch":null,"bank_agent_code":null,"insurance_specialist_code":null,"for_cancel_date":null,"admin_fee":"0.00","group_policy_number":"3000047","claim_payee_type":null,"group_company_type_code":null},"source":{"version":"0.10.0.Final","connector":"postgresql","name":"omni_connectors15","ts_ms":1581331740512,"snapshot":"false","db":"omni","schema":"omni","table":"groups","txId":134371517,"lsn":182382434864,"xmin":null},"op":"u","ts_ms":1581331175052}}';
+var newVarJSON = JSON.parse(msg);
+var newVarJSONID = "";
+var cdc_operations = "";
+var entityType = "";
+var srcTableName = (newVarJSON.payload.source.table ? newVarJSON.payload.source.table : "None")
+var ignoreMsg = "NO";
+var operationType = newVarJSON.payload.op;
+var data ;
+    if (operationType == "u") {
+		newMessage.operation = "updateEntity";
+		data = newVarJSON.payload.after;
+		cdc_operations = "UPDATE";
+	}else if(operationType == "c"){
+		newMessage.operation = "updateEntity";
+		data = newVarJSON.payload.after;
+		cdc_operations = "INSERT";
+	}else if(operationType == "r"){
+		newMessage.operation = "updateEntity";
+		data = newVarJSON.payload.after;
+		cdc_operations = "REFRESH";
+	} else if (operationType == "d") {
+		newMessage.operation = "deleteEntity";
+		data = newVarJSON.payload.before;
+		cdc_operations = "DELETE";
+	} else {
+		ignoreMsg = "YES";
+	}
+    
+console.log(srcTableName);    
+
+switch (srcTableName.toLowerCase()) {
+   	case "accept_cert_subm_policy_member":
+		newVarJSONID = data.id;
+		data.id = parseInt(data.id);
+		data.policy_member_id = parseInt(data.policy_member_id);
+		data.accept_cert_subm_id = parseInt(data.accept_cert_subm_id);
+		data.policy_id = parseInt(data.policy_id);
+		data.amount = parseFloat(data.amount);
+		data.creuser = parseInt(data.creuser);
+		data.credate = ParseMillstoOmniTimeStamp(data.credate);
+		data.upduser = parseInt(data.upduser);
+		data.upddate = ParseMillstoOmniTimeStamp(data.upddate);
+		data.sort_order = parseInt(data.sort_order);
+		break;
+	case "account_codes_lookup":
+		newVarJSONID = data.id;
+		data.id = parseInt(data.id);
+		data.underwriter_id = parseInt(data.underwriter_id);
+		data.creuser = parseInt(data.creuser);
+		data.credate = ParseMillstoOmniTimeStamp(data.credate);
+		data.upduser = parseInt(data.upduser);
+		data.upddate = ParseMillstoOmniTimeStamp(data.upddate);
+		break;
+	case "accounting_line":
+		newVarJSONID = data.id;
+		data.id = parseInt(data.id);
+		data.policy_id = parseInt(data.policy_id);
+		data.receipt_id = parseInt(data.receipt_id);
+		data.transaction_date = ParseMillstoOmniTimeStamp(data.transaction_date);
+		data.receipt_date = ParseMillstoOmniTimeStamp(data.receipt_date);
+		data.debit = parseFloat(data.debit);
+		data.credit = parseFloat(data.credit);
+		data.plan_currency_rate = parseFloat(data.plan_currency_rate);
+		data.receipt_currency_rate = parseFloat(data.receipt_currency_rate);
+		data.start_date = ParseMillstoOmniTimeStamp(data.start_date);
+		data.end_date = ParseMillstoOmniTimeStamp(data.end_date);
+		data.receipt_reversed_date = ParseMillstoOmniTimeStamp(data.receipt_reversed_date);
+		data.bank_charge = parseFloat(data.bank_charge);
+		data.underwriter_id = parseInt(data.underwriter_id);
+		data.endorsement_id = parseInt(data.endorsement_id);
+		data.creuser = parseInt(data.creuser);
+		data.credate = ParseMillstoOmniTimeStamp(data.credate);
+		data.upduser = parseInt(data.upduser);
+		data.upddate = ParseMillstoOmniTimeStamp(data.upddate);
+		break;
+	case "acs_job_submission":
+		newVarJSONID = data.id;
+		data.id = parseInt(data.id);
+		data.date_run = ParseMillstoOmniTimeStamp(data.date_run);
+		data.creuser = parseInt(data.creuser);
+		data.credate = ParseMillstoOmniTimeStamp(data.credate);
+		data.upduser = parseInt(data.upduser);
+		data.upddate = ParseMillstoOmniTimeStamp(data.upddate);
+		break;
+	case "adjudication_classification":
+		newVarJSONID = data.code;
+		data.sort_order = parseInt(data.sort_order);
+		break;
+	case "admedika_adj_class":
+		newVarJSONID = data.code;
+		break;
+	case "admedika_claim_submission":
+		newVarJSONID = data.id;
+		data.id = parseInt(data.id);
+		data.header_file_id = parseInt(data.header_file_id);
+		data.detail_file_id = parseInt(data.detail_file_id);
+		data.file_id = parseInt(data.file_id);
+		data.creuser = parseInt(data.creuser);
+		data.credate = ParseMillstoOmniTimeStamp(data.credate);
+		data.upduser = parseInt(data.upduser);
+		data.upddate = ParseMillstoOmniTimeStamp(data.upddate);
+		break;
+	case "admedika_upload":
+		newVarJSONID = data.code;
+		data.node_level = parseInt(data.node_level);
+		break;
+	case "address":
+		newVarJSONID = data.id;
+		data.id = parseInt(data.id);
+		data.region_id = parseInt(data.region_id);
+		data.country_id = parseInt(data.country_id);
+		data.creuser = parseInt(data.creuser);
+		data.credate = ParseMillstoOmniTimeStamp(data.credate);
+		data.upduser = parseInt(data.upduser);
+		data.upddate = ParseMillstoOmniTimeStamp(data.upddate);
+		data.longitude = parseFloat(data.longitude);
+		data.latitude = parseFloat(data.latitude);
+		break;
+	case "advisor_branch":
+		newVarJSONID = data.code;
+		data.external_id = parseInt(data.external_id);
+		data.sort_order = parseInt(data.sort_order);
+		break;
+	case "advisor_gl_transaction_type":
+		newVarJSONID = data.advisor_pos_type_code+"_"+data.gl_account_code+"_"+data.transaction_type_code+"_"+data.underwriter_id;
+		data.id = parseInt(data.id);
+		data.underwriter_id = parseInt(data.underwriter_id);
+		data.creuser = parseInt(data.creuser);
+		data.credate = ParseMillstoOmniTimeStamp(data.credate);
+		data.upduser = parseInt(data.upduser);
+		data.upddate = ParseMillstoOmniTimeStamp(data.upddate);
+		break;
+	case "applicant_relationship_type":
+		newVarJSONID = data.code;
+		data.sort_order = parseInt(data.sort_order);
+		break;
+	case "area_covered":
+		newVarJSONID = data.code;
+		data.sort_order = parseInt(data.sort_order);
+		break;
+	case "backup_prod_rel_type":
+		newVarJSONID = data.code;
+		data.id = parseInt(data.id);
+		data.product_id = parseInt(data.product_id);
+		data.min_entry_age = parseInt(data.min_entry_age);
+		data.max_entry_age = parseInt(data.max_entry_age);
+		data.max_renewal_age = parseInt(data.max_renewal_age);
+		data.number_to_charge = parseInt(data.number_to_charge);
+		data.add_dependant_premium = parseFloat(data.add_dependant_premium);
+		data.creuser = parseInt(data.creuser);
+		data.credate = ParseMillstoOmniTimeStamp(data.credate);
+		data.upduser = parseInt(data.upduser);
+		data.upddate = ParseMillstoOmniTimeStamp(data.upddate);
+		data.min_entry_days = parseInt(data.min_entry_days);
+		break;
+	case "bank_acct_internal_bu":
+		newVarJSONID = data.id;
+		data.id = parseInt(data.id);
+		data.bank_id = parseInt(data.bank_id);
+		data.start_date = ParseMillstoOmniTimeStamp(data.start_date);
+		data.end_date = ParseMillstoOmniTimeStamp(data.end_date);
+		data.bank_acct_internal_id = parseInt(data.bank_acct_internal_id);
+		data.sort_order = parseInt(data.sort_order);
+		data.creuser = parseInt(data.creuser);
+		data.credate = ParseMillstoOmniTimeStamp(data.credate);
+		data.upduser = parseInt(data.upduser);
+		data.upddate = ParseMillstoOmniTimeStamp(data.upddate);
+		break;
+	case "bank_agent_code_smi":
+		newVarJSONID = data.id;
+		data.dteapp = parseInt(data.dteapp);
+		data.tlicexpdt = parseInt(data.tlicexpdt);
+		break;
+	case "benefit_referral_config":
+		newVarJSONID = data.id;
+		data.id = parseInt(data.id);
+		data.creuser = parseInt(data.creuser);
+		data.credate = ParseMillstoOmniTimeStamp(data.credate);
+		data.upddate = ParseMillstoOmniTimeStamp(data.upddate);
+		data.upduser = parseInt(data.upduser);
+		break;
+	case "bill_rec_counter_details":
+		newVarJSONID = data.id;
+		data.id = parseInt(data.id);
+		data.billing_receipt_counter_id = parseInt(data.billing_receipt_counter_id);
+		data.underwriter_id = parseInt(data.underwriter_id);
+		data.year = parseInt(data.year);
+		data.number_series_from = parseInt(data.number_series_from);
+		data.number_series_to = parseInt(data.number_series_to);
+		data.creuser = parseInt(data.creuser);
+		data.credate = ParseMillstoOmniTimeStamp(data.credate);
+		data.upduser = parseInt(data.upduser);
+		data.upddate = ParseMillstoOmniTimeStamp(data.upddate);
+		data.current_series = parseInt(data.current_series);
+		break;
+	case "bill_rec_counter_users":
+		newVarJSONID = data.id;
+		data.id = parseInt(data.id);
+		data.bill_rec_counter_details_id = parseInt(data.bill_rec_counter_details_id);
+		data.user_id = parseInt(data.user_id);
+		data.creuser = parseInt(data.creuser);
+		data.credate = ParseMillstoOmniTimeStamp(data.credate);
+		data.upduser = parseInt(data.upduser);
+		data.upddate = ParseMillstoOmniTimeStamp(data.upddate);
+		break;
+	case "billing_receipt_counter":
+		newVarJSONID = data.id;
+		data.id = parseInt(data.id);
+		data.sales_region_id = parseInt(data.sales_region_id);
+		data.creuser = parseInt(data.creuser);
+		data.credate = ParseMillstoOmniTimeStamp(data.credate);
+		data.upduser = parseInt(data.upduser);
+		data.upddate = ParseMillstoOmniTimeStamp(data.upddate);
+		break;
+    case "claim":
+        newVarJSONID = data.id;
+        break;
+    case "claim_type":
+        newVarJSONID = data.id;
+        break;
+    case "product":
+        newVarJSONID = data.id;
+        break;
+    case "groups":
+		newVarJSONID = data.id;
+		data.credate = ParseMillstoOmniTimeStamp(data.credate);
+		data.upddate = ParseMillstoOmniTimeStamp(data.upddate);
+		data.start_date = ParseMillstoOmniTimeStamp(data.start_date);
+		data.end_date = ParseMillstoOmniTimeStamp(data.end_date);
+		data.reinstate_date = ParseMillstoOmniTimeStamp(data.reinstate_date);
+		data.deactivation_date = ParseMillstoOmniTimeStamp(data.deactivation_date);
+		data.lapsed_effective_date = ParseMillstoOmniTimeStamp(data.lapsed_effective_date);
+		data.expired_effective_date = ParseMillstoOmniTimeStamp(data.expired_effective_date);
+		data.cancellation_date = ParseMillstoOmniTimeStamp(data.cancellation_date);
+		data.for_cancel_date = ParseMillstoOmniTimeStamp(data.for_cancel_date);
+		break;	
+    }
+    
+	data.ENTITY_TYPE = "SME";
+	data.SRC_TABLE_NAME = srcTableName;
+	data.DEBEZIUM_TIMESTAMPS = formatTimeStamp(newVarJSON.payload.ts_ms);
+	data.SRC_SYSTEM = "OMNI";
+	data.SRC_CDC_OPERATION = cdc_operations;
+	data.SRC_TXN_TIMESTAMP = getDateNow(newVarJSON.payload.ts_ms);
+	data.SRC_CHANGE_NUM = getDateNow(newVarJSON.payload.ts_ms);
+
+newMessage.entityType= srcTableName.toUpperCase();
+newMessage.srcEntityName =  entityType;
+newMessage.dbInstance =  "PruCareSME";    
+newMessage.id = srcTableName + "::" + newVarJSONID;
+
+newMessage.bodyAsString = JSON.stringify(cleanseRaw(data));
+
+if (ignoreMsg == "NO") {
+        console.log(newMessage);
+    }
+}
+
+function cleanseRaw(obj) {
+	for ( var propName in obj) {
+		if (obj[propName] === null) {
+			obj[propName] = "";
+		}
+	}
+	return obj;
+}
+
+function formatTimeStamp(time) {
+	var today = new Date(time);
+	return today.toISOString().replace('T',' ').replace('Z','');
+}
+
+function ParseMillstoOmniTimeStamp(time) {
+		if (time == null) {
+		return null;
+	}
+
+	// time += 25200000;
+
+	var today = new Date(time);
+	return today.toISOString().replace('T',' ').replace('Z','');
+}
+
+function getDateNow() {
+	var today = new Date();
+  return today.toISOString().replace('T',' ').replace('Z','');
+}
+
+
+</script>
+
+
+</head>
+
+</html>
